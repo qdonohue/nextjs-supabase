@@ -18,9 +18,12 @@ This directory contains all Supabase-related database types, schemas, and query 
 - **Enums**: Database enums and application-specific constants
 
 ### Type Generation
+Generate TypeScript types from your Supabase schema:
 ```bash
 npx supabase gen types typescript --project-id YOUR_PROJECT_ID > models/types/database.ts
 ```
+
+For now, there's a sample `posts` table type structure in place that you can replace with your actual generated types.
 
 ## Queries Directory (`/queries/`)
 

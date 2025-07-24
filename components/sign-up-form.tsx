@@ -39,6 +39,15 @@ export function SignUpForm({
       return;
     }
 
+    // In development, allow @example emails
+    const isDev = process.env.NODE_ENV === 'development';
+    const isExampleEmail = email.includes('@example');
+    if (isExampleEmail && !isDev) {
+      setError("Example email addresses are not allowed");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -70,7 +79,7 @@ export function SignUpForm({
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="email"
+                  type={process.env.NODE_ENV === 'development' && email.includes('@example') ? "text" : "email"}
                   placeholder="m@example.com"
                   required
                   value={email}

@@ -51,6 +51,8 @@ This is a Next.js 15 + Supabase application for building full-stack web applicat
 - Database queries and mutations go in `/models/queries/`
 - Use proper TypeScript typing for all database operations
 - Always handle errors appropriately in database operations
+- Sample `posts` model is provided as a reference - replace with your actual tables
+- Use the test script `npx ts-node scripts/test-supabase.ts` to verify connection
 
 ### Types & Utilities
 - Shared TypeScript types go in `/types/` for application-wide interfaces

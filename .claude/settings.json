@@ -1,0 +1,5 @@
+{
+  "permissions": [
+    {"type": "deny", "files": [".env*"]}
+  ]
+}
