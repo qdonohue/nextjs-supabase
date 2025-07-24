@@ -1,7 +1,7 @@
 #!/usr/bin/env npx ts-node
 
 import { config } from 'dotenv';
-import { getAllPosts } from '@/models/queries/posts';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Test script to verify Supabase connection and basic queries
@@ -29,34 +29,19 @@ async function testSupabaseConnection() {
   console.log(`📡 Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
   
   try {
-    // Test a simple query
-    const { data, error } = await getAllPosts();
+    const supabase = await createClient();
+    
+    // Test basic connection by trying to get the current time from the database
+    const { data, error } = await supabase.rpc('now');
     
     if (error) {
-      console.error('❌ Error querying posts:', error);
-      console.log('\n💡 This might be expected if the "posts" table doesn\'t exist yet.');
-      console.log('   You can create it in your Supabase dashboard with:');
-      console.log(`
-CREATE TABLE posts (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  title TEXT NOT NULL,
-  content TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-      `);
+      console.error('❌ Error connecting to Supabase:', error.message);
       return;
     }
     
     console.log('✅ Successfully connected to Supabase!');
-    console.log(`📊 Found ${data?.length || 0} posts in the database`);
-    
-    if (data && data.length > 0) {
-      console.log('\n📝 Sample posts:');
-      data.slice(0, 3).forEach((post, index) => {
-        console.log(`  ${index + 1}. ${post.title} (${post.created_at})`);
-      });
-    }
+    console.log(`🕐 Database time: ${data}`);
+    console.log('\n💡 Connection test passed. You can now create tables and start building your app.');
     
   } catch (error) {
     console.error('❌ Unexpected error:', error);
