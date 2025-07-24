@@ -1,3 +1,10 @@
+// EXAMPLE POST QUERIES - UNCOMMENT WHEN YOU HAVE A POSTS TABLE
+// 
+// This is a reference implementation for database queries.
+// Once you create your actual database tables and generate types,
+// you can uncomment and modify this code.
+
+/*
 import { createClient } from '@/lib/supabase/server';
 import type { Post, PostInsert, PostUpdate } from '@/models/types/database';
 
@@ -7,9 +14,6 @@ type QueryResult<T> = {
   error: string | null;
 };
 
-/**
- * Get all posts
- */
 export async function getAllPosts(): Promise<QueryResult<Post[]>> {
   const supabase = await createClient();
   
@@ -25,9 +29,6 @@ export async function getAllPosts(): Promise<QueryResult<Post[]>> {
   return { data: data || [], error: null };
 }
 
-/**
- * Get a single post by ID
- */
 export async function getPostById(id: string): Promise<QueryResult<Post>> {
   const supabase = await createClient();
   
@@ -44,9 +45,6 @@ export async function getPostById(id: string): Promise<QueryResult<Post>> {
   return { data, error: null };
 }
 
-/**
- * Create a new post
- */
 export async function createPost(post: PostInsert): Promise<QueryResult<Post>> {
   const supabase = await createClient();
   
@@ -67,9 +65,6 @@ export async function createPost(post: PostInsert): Promise<QueryResult<Post>> {
   return { data, error: null };
 }
 
-/**
- * Update an existing post
- */
 export async function updatePost(id: string, updates: PostUpdate): Promise<QueryResult<Post>> {
   const supabase = await createClient();
   
@@ -90,9 +85,6 @@ export async function updatePost(id: string, updates: PostUpdate): Promise<Query
   return { data, error: null };
 }
 
-/**
- * Delete a post
- */
 export async function deletePost(id: string): Promise<QueryResult<boolean>> {
   const supabase = await createClient();
   
@@ -107,3 +99,4 @@ export async function deletePost(id: string): Promise<QueryResult<boolean>> {
 
   return { data: true, error: null };
 }
+*/

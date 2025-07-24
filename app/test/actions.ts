@@ -15,10 +15,9 @@ export async function initSupabaseAction() {
     const { stdout, stderr } = await execAsync('npx supabase start')
     console.log('Supabase stdout:', stdout)
     if (stderr) console.log('Supabase stderr:', stderr)
-    return { success: true, message: 'Supabase started successfully' }
+    console.log('✅ Supabase started successfully')
   } catch (error) {
-    console.error('Failed to start Supabase:', error)
-    return { success: false, message: 'Failed to start Supabase' }
+    console.error('❌ Failed to start Supabase:', error)
   }
 }
 
@@ -28,9 +27,8 @@ export async function stopSupabaseAction() {
     const { stdout, stderr } = await execAsync('npx supabase stop')
     console.log('Supabase stdout:', stdout)
     if (stderr) console.log('Supabase stderr:', stderr)
-    return { success: true, message: 'Supabase stopped successfully' }
+    console.log('✅ Supabase stopped successfully')
   } catch (error) {
-    console.error('Failed to stop Supabase:', error)
-    return { success: false, message: 'Failed to stop Supabase' }
+    console.error('❌ Failed to stop Supabase:', error)
   }
 }
