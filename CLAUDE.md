@@ -103,39 +103,44 @@ SUPABASE_PROJECT_ID=your-project-id  # For type generation (extract from SUPABAS
 
 ## Development Workflow
 
-### Local Database Development (Recommended)
-**Avoid remote Supabase dashboard updates!** Use local development for schema changes:
+### Local Migrations with Remote Database
+Write migrations locally and deploy to remote database:
 
-1. **Setup local Supabase**:
+1. **Initialize Supabase locally (one-time setup)**:
    ```bash
    npx supabase init
-   npx supabase start
    ```
 
-2. **Create migrations locally**:
+2. **Link to your remote project**:
+   ```bash
+   npx supabase link --project-ref your-project-id
+   ```
+
+3. **Create migrations locally**:
    ```bash
    npx supabase migration new create_posts_table
    # Edit the generated SQL file in supabase/migrations/
    ```
 
-3. **Apply migrations locally**:
+4. **Deploy migrations to remote** (requires database password):
    ```bash
-   npx supabase db reset  # Reset and apply all migrations
+   npx supabase db push
    ```
+   *Note: Claude Code cannot enter interactive passwords, so the user must run this command manually.*
 
-4. **Generate types after schema changes**:
+5. **Generate types after schema changes**:
    ```bash
    npm run types:generate
    ```
 
-5. **Deploy to production**:
+6. **Test your connection**:
    ```bash
-   npx supabase db push  # Push migrations to remote
+   npx ts-node scripts/test-supabase.ts
    ```
 
 ### Type Generation
 - Run `npm run types:generate` after any schema changes
-- Types are automatically generated from your local database schema
+- Types are automatically generated from your remote database schema
 - Never manually edit generated types in `/models/types/database.ts`
 
 ## Folder-Specific Guidelines

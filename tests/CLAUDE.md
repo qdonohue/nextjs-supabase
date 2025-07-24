@@ -245,6 +245,119 @@ export const mockAdmin: UserProfile = {
 - Test edge cases and error conditions
 - Don't sacrifice quality for coverage percentage
 
+## Testing Database Operations
+
+### Script-based Testing for Development
+
+For quick testing of database operations during development, use Node.js scripts in the `/scripts/` directory rather than full Jest tests:
+
+#### Path Alias Issues with ts-node
+When using `ts-node` to run TypeScript test scripts, path aliases (like `@/models`) don't work properly. Use relative imports instead:
+
+```typescript
+// ❌ This won't work with ts-node
+import { createClient } from '@/lib/supabase/server';
+
+// ✅ Use relative paths instead
+import { createClient } from '../lib/supabase/server';
+```
+
+#### Simple Database Testing Approach
+For database testing during development, create simple Node.js scripts:
+
+```javascript
+// scripts/test-table.js
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config({ path: '.env.local' });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+);
+
+async function testTable() {
+  const { data, error } = await supabase
+    .from('your_table')
+    .select('*')
+    .limit(1);
+    
+  if (error) {
+    console.error('❌ Error:', error.message);
+  } else {
+    console.log('✅ Success:', data);
+  }
+}
+
+testTable();
+```
+
+#### Row Level Security (RLS) Testing
+
+When testing tables with RLS policies, you have several approaches:
+
+##### Option 1: Service Role Key (Admin Testing)
+For testing CRUD operations while bypassing RLS:
+
+```javascript
+// scripts/test-table-admin.js
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config({ path: '.env.local' });
+
+const adminClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY  // Bypasses RLS
+);
+```
+
+**Note**: Service role still respects foreign key constraints, so you need valid user IDs that exist in `auth.users`.
+
+##### Option 2: Real User Testing (Recommended)
+For testing with proper authentication and RLS:
+
+```javascript
+// scripts/test-table-with-user.js
+const adminClient = createClient(url, serviceKey);  // For user management
+const userClient = createClient(url, anonKey);      // For authenticated requests
+
+// Create test user
+const { data: user } = await adminClient.auth.admin.createUser({
+  email: 'test@example.com',
+  password: 'password123',
+  email_confirm: true
+});
+
+// Sign in as test user
+await userClient.auth.signInWithPassword({
+  email: 'test@example.com',
+  password: 'password123'
+});
+
+// Now test operations - RLS will be properly enforced
+const { data, error } = await userClient.from('your_table').insert({...});
+
+// Clean up
+await adminClient.auth.admin.deleteUser(user.user.id);
+```
+
+##### Expected RLS Behavior
+
+```bash
+# For unauthenticated requests (expected)
+❌ Error: new row violates row-level security policy for table "user_table"
+
+# For authenticated requests with proper permissions
+✅ Success: Operation completed
+
+# For authenticated requests trying to access unauthorized data  
+✅ RLS working correctly - cannot access other users' data
+```
+
+This confirms:
+1. Database connection works
+2. Table exists and is accessible  
+3. RLS policies are properly enforced
+4. Authentication and authorization work correctly
+
 ## Running Tests
 
 ```bash
@@ -262,4 +375,13 @@ npm run test Button.test.tsx
 
 # Run tests matching pattern
 npm run test -- --testNamePattern="auth"
+
+# Run simple database test scripts
+node scripts/test-table.js
+
+# Test with service role (admin privileges)
+node scripts/test-your-table-admin.js
+
+# Test with real user authentication (recommended)
+node scripts/test-your-table-with-user.js
 ```
