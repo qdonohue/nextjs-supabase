@@ -11,7 +11,7 @@ type QueryResult<T> = {
  * Get all posts
  */
 export async function getAllPosts(): Promise<QueryResult<Post[]>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('posts')
@@ -29,7 +29,7 @@ export async function getAllPosts(): Promise<QueryResult<Post[]>> {
  * Get a single post by ID
  */
 export async function getPostById(id: string): Promise<QueryResult<Post>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('posts')
@@ -48,7 +48,7 @@ export async function getPostById(id: string): Promise<QueryResult<Post>> {
  * Create a new post
  */
 export async function createPost(post: PostInsert): Promise<QueryResult<Post>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('posts')
@@ -71,7 +71,7 @@ export async function createPost(post: PostInsert): Promise<QueryResult<Post>> {
  * Update an existing post
  */
 export async function updatePost(id: string, updates: PostUpdate): Promise<QueryResult<Post>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('posts')
@@ -94,7 +94,7 @@ export async function updatePost(id: string, updates: PostUpdate): Promise<Query
  * Delete a post
  */
 export async function deletePost(id: string): Promise<QueryResult<boolean>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { error } = await supabase
     .from('posts')

@@ -20,6 +20,10 @@ This is a Next.js 15 + Supabase application for building full-stack web applicat
 /utils/               # Pure utility functions (see utils/CLAUDE.md)
 ```
 
+### Naming
+Use PascalCase for component file names.
+Use snake_case for api files.
+
 ### Supabase Integration
 - **Dual client setup**: Browser client (`lib/supabase/client.ts`) and server client (`lib/supabase/server.ts`)
 - **Cookie-based auth**: Uses `@supabase/ssr` for session management across client/server
@@ -74,6 +78,12 @@ This is a Next.js 15 + Supabase application for building full-stack web applicat
 - Radix UI primitives for accessibility
 - Proper error boundaries and loading states
 
+### Development Testing Page
+- **Test Page**: `/app/test/` contains a development-only page for testing server functionality
+- **Usage**: Use the `/test` page to trigger various actions and functionality for debugging
+- **Guidelines**: When implementing features that could benefit from testing/debugging UI, proactively add buttons or forms to the test page and document what they demonstrate
+- **Environment**: Page only renders in development environment (`NODE_ENV !== 'development'`)
+
 ## Important Files
 
 ### Configuration
@@ -88,7 +98,45 @@ This is a Next.js 15 + Supabase application for building full-stack web applicat
 ```
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your-anon-key
+SUPABASE_PROJECT_ID=your-project-id  # For type generation (extract from SUPABASE_URL)
 ```
+
+## Development Workflow
+
+### Local Database Development (Recommended)
+**Avoid remote Supabase dashboard updates!** Use local development for schema changes:
+
+1. **Setup local Supabase**:
+   ```bash
+   npx supabase init
+   npx supabase start
+   ```
+
+2. **Create migrations locally**:
+   ```bash
+   npx supabase migration new create_posts_table
+   # Edit the generated SQL file in supabase/migrations/
+   ```
+
+3. **Apply migrations locally**:
+   ```bash
+   npx supabase db reset  # Reset and apply all migrations
+   ```
+
+4. **Generate types after schema changes**:
+   ```bash
+   npm run types:generate
+   ```
+
+5. **Deploy to production**:
+   ```bash
+   npx supabase db push  # Push migrations to remote
+   ```
+
+### Type Generation
+- Run `npm run types:generate` after any schema changes
+- Types are automatically generated from your local database schema
+- Never manually edit generated types in `/models/types/database.ts`
 
 ## Folder-Specific Guidelines
 

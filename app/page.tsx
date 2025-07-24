@@ -8,7 +8,7 @@ export default function Home() {
       <div className="w-full max-w-2xl p-8 space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Quinn's Placeholder Project
+            Quinn&apos;s Placeholder Project
           </h1>
           <p className="text-muted-foreground text-lg">
             A Next.js + Supabase starter template
