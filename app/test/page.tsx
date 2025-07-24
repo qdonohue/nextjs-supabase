@@ -1,4 +1,4 @@
-import { testAction } from './actions'
+import { testAction, initSupabaseAction, stopSupabaseAction } from './actions'
 import { Button } from '@/components/ui/button'
 
 export default function TestPage() {
@@ -13,7 +13,22 @@ export default function TestPage() {
         This page only exists in development and is used for testing server functionality.
       </p>
       
-      <div className="space-y-4">
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Supabase Local Development</h2>
+          <div className="flex gap-2">
+            <form action={initSupabaseAction}>
+              <Button type="submit" variant="default">Start Supabase</Button>
+            </form>
+            <form action={stopSupabaseAction}>
+              <Button type="submit" variant="outline">Stop Supabase</Button>
+            </form>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            Start/stop local Supabase development environment. Check server console for output.
+          </p>
+        </div>
+
         <div>
           <h2 className="text-xl font-semibold mb-2">Server Actions</h2>
           <form action={testAction}>

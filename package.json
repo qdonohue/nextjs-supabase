@@ -9,7 +9,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "types:generate": "node scripts/generate-types.js"
+    "types:generate": "node scripts/generate-types.js",
+    "db:init": "npx supabase start",
+    "db:stop": "npx supabase stop",
+    "db:reset": "npx supabase db reset"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.1",
